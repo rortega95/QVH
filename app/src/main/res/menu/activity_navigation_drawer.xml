@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Descubrir" />
+        <item
+            android:id="@+id/nav_theaters"
+            android:icon="@drawable/ic_theaters_black_24px"
+            android:title="Ya en cines" />
+        <item
+            android:id="@+id/nav_releases"
+            android:icon="@drawable/ic_today_black_24px"
+            android:title="Proximos estrenos" />
+    </group>
+
+    <item android:title="Mis películas">
+        <menu>
+            <item
+                android:id="@+id/nav_movie_like"
+                android:icon="@drawable/ic_favorite_black_24px"
+                android:title="Favoritas" />
+            <item
+                android:id="@+id/nav_movie_pending"
+                android:icon="@drawable/ic_watch_later_black_24px"
+                android:title="Pendientes" />
+            <item
+                android:id="@+id/nav_movie_saw"
+                android:icon="@drawable/ic_check_circle_black_24px"
+                android:title="Vistas" />
+        </menu>
+    </item>
+
+</menu>
