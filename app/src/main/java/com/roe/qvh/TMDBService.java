@@ -1,6 +1,8 @@
 package com.roe.qvh;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,27 +32,13 @@ public class TMDBService extends AsyncTask<String, Void, String> {
                 result+=line;
             }
 
-//            JSONObject jsonObject = null;
-//            try {
-//                jsonObject = new JSONObject(result.toString());
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            JSONArray jsonArray = jsonObject.optJSONArray("results");
-//            for (int i=0; i<jsonArray.length(); i++) {
-//                try {
-//                    Log.i("result", jsonArray.getString(i));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Log.i("result", result);
 
         return result;
     }

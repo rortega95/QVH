@@ -5,4 +5,5 @@ package com.roe.qvh;
  */
 
 public class APIQueries {
+
 }
