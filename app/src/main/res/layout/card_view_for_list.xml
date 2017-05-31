@@ -12,7 +12,7 @@
 
 
     <ImageView
-        android:id="@+id/imageView_poster"
+        android:id="@+id/imageView_poster_cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         card_view:srcCompat="@color/cardview_light_background"/>

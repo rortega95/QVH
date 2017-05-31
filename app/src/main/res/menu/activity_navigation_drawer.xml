@@ -7,6 +7,10 @@
             android:icon="@drawable/ic_search_black_24px"
             android:title="Descubrir" />
         <item
+            android:id="@+id/nav_luckysearch"
+            android:icon="@drawable/ic_redeem_black_24px"
+            android:title="Voy a tener suerte" />
+        <item
             android:id="@+id/nav_theaters"
             android:icon="@drawable/ic_theaters_black_24px"
             android:title="Ya en cines" />
@@ -18,6 +22,7 @@
 
     <item android:title="Mis películas">
         <menu>
+            <group android:checkableBehavior="single">
             <item
                 android:id="@+id/nav_movie_like"
                 android:icon="@drawable/ic_favorite_black_24px"
@@ -30,6 +35,7 @@
                 android:id="@+id/nav_movie_saw"
                 android:icon="@drawable/ic_check_circle_black_24px"
                 android:title="Vistas" />
+            </group>
         </menu>
     </item>
 
