@@ -20,6 +20,9 @@ public class Movie {
         this.overview = overview;
     }
 
+    public Movie() {
+    }
+
     public String getTitle() {
         return title;
     }

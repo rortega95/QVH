@@ -2,11 +2,25 @@ package com.roe.qvh;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -23,12 +37,49 @@ public class MovieLikeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    static RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_movie_like, container, false);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.reciclerViewMovieLike);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        final ArrayList<Movie> movies = new ArrayList<Movie>();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("movies").child("like");
+                Log.i("key", myRef.getKey());
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i("ds", dataSnapshot.getValue().toString());
+                        for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                            Log.i("value", ds.getValue().toString());
+                            Movie m = ds.getValue(Movie.class);
+                            Log.i("movie", m.toString());
+                            movies.add(m);
+                        }
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies);
+                        recyclerView.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }).run();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie_like, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

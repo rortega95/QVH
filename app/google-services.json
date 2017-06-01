@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "693548180482",
+    "firebase_url": "https://que-veo-hoy.firebaseio.com",
+    "project_id": "que-veo-hoy",
+    "storage_bucket": "que-veo-hoy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693548180482:android:5cd1ada5e982bfd6",
+        "android_client_info": {
+          "package_name": "com.roe.qvh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "693548180482-hqu8ra9qn8b3k634pnrb67na8nobblgh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAY5s11QTopCpXU22Xs6GXb6lsmLv2bhfU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

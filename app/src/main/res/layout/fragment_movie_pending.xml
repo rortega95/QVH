@@ -5,9 +5,12 @@
     tools:context="com.roe.qvh.MoviePendingFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/reciclerViewMoviePending"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="peliculas pendientes" />
+        android:layout_gravity="center"
+        android:layout_margin="5dp" />
 
 </FrameLayout>

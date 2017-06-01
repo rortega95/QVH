@@ -5,9 +5,11 @@
     tools:context="com.roe.qvh.MovieLikeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="peliculas favoritas" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/reciclerViewMovieLike"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"/>
 </FrameLayout>
