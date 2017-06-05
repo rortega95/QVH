@@ -1,5 +1,6 @@
 package com.roe.qvh;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -41,6 +43,9 @@ public class MovieLuckySearchFragment extends Fragment {
     static ImageView imageViewPoster;
     static TextView textViewTitle;
 
+    static ImageView imageViewBackdropPath;
+    static TextView textViewOverview;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -57,6 +62,9 @@ public class MovieLuckySearchFragment extends Fragment {
 
         textViewTitle = (TextView) rootView.findViewById(R.id.textView_title_cardView);
         imageViewPoster = (ImageView) rootView.findViewById(R.id.imageView_poster_cardView);
+
+        imageViewBackdropPath = (ImageView) rootView.findViewById(R.id.imageView_backdrop);
+        textViewOverview = (TextView) rootView.findViewById(R.id.textView_overview);
 
         Button buttonLike = (Button) rootView.findViewById(R.id.button_like_cardView);
         buttonLike.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +102,15 @@ public class MovieLuckySearchFragment extends Fragment {
             public void onClick(View v) {
                 arrayListMovies.remove(0);
                 setInCard();
+            }
+        });
+
+        imageViewPoster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MovieDataFragment mdf = new MovieDataFragment();
+                mdf.getData(arrayListMovies.get(0));
+                mdf.show(getFragmentManager(), "abcabc");
             }
         });
 
@@ -141,12 +158,14 @@ public class MovieLuckySearchFragment extends Fragment {
 
     private void upFirebase(String list){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("movies").child(list).child(arrayListMovies.get(0).getId()+"");
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference myRef = database.getReference("users").child(user).child("movies").child(list).child(arrayListMovies.get(0).getId()+"");
 
         myRef.child("title").setValue(arrayListMovies.get(0).getTitle());
         myRef.child("overview").setValue(arrayListMovies.get(0).getOverview());
         myRef.child("poster_path").setValue(arrayListMovies.get(0).getPoster_path());
         myRef.child("video_path").setValue(arrayListMovies.get(0).getVideo_path());
+        myRef.child("backdrop_path").setValue(arrayListMovies.get(0).getBackdrop_path());
     }
 
     public void discoverMovie() {
@@ -179,7 +198,8 @@ public class MovieLuckySearchFragment extends Fragment {
                         jsonArray.getJSONObject(i).getString("poster_path"),
                         //key,
                         null,
-                        jsonArray.getJSONObject(i).getString("overview")
+                        jsonArray.getJSONObject(i).getString("overview"),
+                        jsonArray.getJSONObject(i).getString("backdrop_path")
                 );
                 //Log.i("movie", movie.toString());
                 arrayListMovies.add(movie);

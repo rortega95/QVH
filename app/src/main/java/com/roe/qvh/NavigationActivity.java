@@ -1,5 +1,6 @@
 package com.roe.qvh;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         MovieLikeFragment.OnFragmentInteractionListener, MoviePendingFragment.OnFragmentInteractionListener,
@@ -36,8 +43,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         /******************************************************************************************/
 
-
-
         /******************************************************************************************/
     }
 
@@ -53,6 +58,25 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        /******************************************************************************************/
+
+        ImageButton logout = (ImageButton) findViewById(R.id.button_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(NavigationActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        TextView textView = (TextView) findViewById(R.id.textView_email_navHeader);
+        textView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        /******************************************************************************************/
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation, menu);
         return true;

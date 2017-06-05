@@ -11,13 +11,15 @@ public class Movie {
     private String video_path;
     private int id;
     private String overview;
+    private String backdrop_path;
 
-    public Movie(int id, String title, String poster_path, String video_path, String overview) {
+    public Movie(int id, String title, String poster_path, String video_path, String overview, String backdrop_path) {
         this.title = title;
         this.poster_path = poster_path;
         this.video_path = video_path;
         this.id = id;
         this.overview = overview;
+        this.backdrop_path = backdrop_path;
     }
 
     public Movie() {
@@ -61,6 +63,14 @@ public class Movie {
 
     public void setOverview(String overview) {
         this.overview = overview;
+    }
+
+    public String getBackdrop_path() {
+        return backdrop_path;
+    }
+
+    public void setBackdrop_path(String backdrop_path) {
+        this.backdrop_path = backdrop_path;
     }
 
     @Override

@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,20 +52,27 @@ public class MovieSawFragment extends Fragment {
             @Override
             public void run() {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("movies").child("saw");
+                String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DatabaseReference myRef = database.getReference("users").child(user).child("movies").child("saw");
                 Log.i("key", myRef.getKey());
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.i("ds", dataSnapshot.getValue().toString());
-                        for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                            Log.i("value", ds.getValue().toString());
-                            Movie m = ds.getValue(Movie.class);
-                            Log.i("movie", m.toString());
-                            movies.add(m);
+                        if (dataSnapshot.exists()) {
+                            Log.i("dsExist", "hay pelis");
+                            Log.i("ds", dataSnapshot.getValue().toString());
+                            for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                                Log.i("value", ds.getValue().toString());
+                                Movie m = ds.getValue(Movie.class);
+                                Log.i("movie", m.toString());
+                                movies.add(m);
+                            }
+                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies);
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            Log.i("dsExist", "NO hay pelis");
+                            Toast.makeText(getContext(), "No has marcado ninguna película como vista", Toast.LENGTH_SHORT).show();
                         }
-                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies);
-                        recyclerView.setAdapter(adapter);
                     }
 
                     @Override
