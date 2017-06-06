@@ -5,9 +5,33 @@
     tools:context="com.roe.qvh.MoviesInTeahtersFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="en cines" />
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/button_backMovie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00ffffff"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24px" />
+
+        <include
+            layout="@layout/card_view_for_teahters"
+            android:layout_weight="1"
+            android:id="@+id/cardViewForTeahters"></include>
+
+        <ImageButton
+            android:id="@+id/button_nextMovie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00ffffff"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24px" />
+    </LinearLayout>
 
 </FrameLayout>

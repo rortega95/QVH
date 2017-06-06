@@ -5,9 +5,43 @@
     tools:context="com.roe.qvh.MovieNextReleasesFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
+        android:id="@+id/textView_releaseDate_cardTeahters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:padding="10dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="15dp" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="proximos estrenos" />
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/button_backMovie_NextReleases"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="#00ffffff"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24px" />
+
+        <include
+            layout="@layout/card_view_for_next_releases"
+            android:layout_weight="1"></include>
+
+        <ImageButton
+            android:id="@+id/button_nextMovie_NextReleases"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="#00ffffff"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24px" />
+    </LinearLayout>
 
 </FrameLayout>

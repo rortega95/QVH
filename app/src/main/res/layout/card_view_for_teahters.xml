@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardViewList"
+    android:orientation="vertical"
+    android:layout_width="290dp"
+    android:layout_height="425dp"
+    android:layout_gravity="center"
+    card_view:cardElevation="20dp"
+    card_view:cardCornerRadius="5dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="380dp"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/imageView_poster_cardTeahters"
+                android:layout_width="274dp"
+                android:layout_height="384dp"
+                card_view:srcCompat="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/textView_title_cardTeahters"
+                android:layout_width="274dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="17dp"
+                android:background="#CCFFFFFF"
+                android:gravity="end"
+                android:padding="10dp"
+                android:text="TextView"
+                android:textColor="#000"
+                android:textSize="20dp"
+                card_view:layout_constraintBottom_toBottomOf="@+id/imageView_poster_cardTeahters"
+                tools:layout_editor_absoluteX="0dp" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:id="@+id/rowButtonsCardViewForTeahters">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_like_cardTeahters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:drawableTop="@drawable/ic_favorite_color_24px"
+                    android:padding="10dp" />
+
+                <Button
+                    android:id="@+id/button_watched_cardTeahters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:drawableTop="@drawable/ic_check_circle_color_24px"
+                    android:padding="10dp" />
+
+                <Button
+                    android:id="@+id/button_pending_cardTeahters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:drawableTop="@drawable/ic_watch_later_color_24px"
+                    android:padding="10dp" />
+
+                <Button
+                    android:id="@+id/button_trailer_cardTeahters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:drawableTop="@drawable/ic_play_circle_filled_color_24px"
+                    android:padding="10dp" />
+
+                <Button
+                    android:id="@+id/button_info_cardTeahters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:drawableTop="@drawable/ic_info_black_24px"
+                    android:padding="10dp" />
+            </LinearLayout>
+        </TableRow>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

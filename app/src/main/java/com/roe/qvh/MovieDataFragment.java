@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -34,7 +35,9 @@ public class MovieDataFragment extends DialogFragment {
 
     Movie movie;
     ImageView imageViewBackdrop;
+    TableRow row;
     TextView textViewOverview;
+    boolean rowEnabled = true;
 
 
     @NonNull
@@ -86,12 +89,19 @@ public class MovieDataFragment extends DialogFragment {
 
         setInCard();
 
+        row = (TableRow) rootView.findViewById(R.id.rowShopTrailer);
+        if (!rowEnabled) {
+            //row.setVisibility(View.INVISIBLE);
+            rootView.removeView(row);
+        }
+
         // Create the AlertDialog object and return it
         return builder.create();
     }
 
     @Override
     public void show(FragmentManager manager, String tag) {
+        Log.i("Enabled?", rowEnabled+"");
         super.show(manager, tag);
     }
 
@@ -126,6 +136,10 @@ public class MovieDataFragment extends DialogFragment {
     public void rentMovie() {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/search?q="+movie.getTitle()+"&c=movies"));
         startActivity(intent);
+    }
+
+    public void disable() {
+        rowEnabled = false;
     }
 
 }
