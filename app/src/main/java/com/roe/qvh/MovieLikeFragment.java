@@ -1,5 +1,6 @@
 package com.roe.qvh;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,7 +40,8 @@ public class MovieLikeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    static RecyclerView recyclerView;
+    RecyclerView recyclerView;
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,8 +55,11 @@ public class MovieLikeFragment extends Fragment {
         final ArrayList<Movie> movies = new ArrayList<Movie>();
 
         new Thread(new Runnable() {
+
             @Override
             public void run() {
+                progressDialog = ProgressDialog.show(getContext(), null, "cargando...", true);
+
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference myRef = database.getReference("users").child(user).child("movies").child("like");
@@ -62,7 +67,9 @@ public class MovieLikeFragment extends Fragment {
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i("datachanged", "yes");
                         if (dataSnapshot.exists()) {
+
                             Log.i("dsExist", "hay pelis");
                             Log.i("ds", dataSnapshot.getValue().toString());
                             for (DataSnapshot ds: dataSnapshot.getChildren()) {
@@ -78,15 +85,17 @@ public class MovieLikeFragment extends Fragment {
                             Toast.makeText(getContext(), "No has marcado ninguna película como favorita", Toast.LENGTH_SHORT).show();
                         }
 
+                        progressDialog.dismiss();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        progressDialog.dismiss();
                     }
                 });
             }
         }).run();
+
 
         // Inflate the layout for this fragment
         return view;

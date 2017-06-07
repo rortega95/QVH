@@ -1,5 +1,6 @@
 package com.roe.qvh;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,7 +37,8 @@ public class MovieSawFragment extends Fragment {
         // Required empty public constructor
     }
 
-    static RecyclerView recyclerView;
+    RecyclerView recyclerView;
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +53,8 @@ public class MovieSawFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                progressDialog = ProgressDialog.show(getContext(), null, "cargando...", true);
+
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference myRef = database.getReference("users").child(user).child("movies").child("saw");
@@ -73,11 +77,13 @@ public class MovieSawFragment extends Fragment {
                             Log.i("dsExist", "NO hay pelis");
                             Toast.makeText(getContext(), "No has marcado ninguna película como vista", Toast.LENGTH_SHORT).show();
                         }
+
+                        progressDialog.dismiss();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        progressDialog.dismiss();
                     }
                 });
             }

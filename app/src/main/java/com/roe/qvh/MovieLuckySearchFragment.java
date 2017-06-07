@@ -1,6 +1,7 @@
 package com.roe.qvh;
 
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,10 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -29,7 +34,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MovieLuckySearchFragment extends Fragment {
 
@@ -39,12 +46,14 @@ public class MovieLuckySearchFragment extends Fragment {
         // Required empty public constructor
     }
 
-    static ArrayList<Movie> arrayListMovies = new ArrayList<>();
-    static ImageView imageViewPoster;
-    static TextView textViewTitle;
+    ArrayList<Movie> arrayListMovies = new ArrayList<>();
+    ImageView imageViewPoster;
+    TextView textViewTitle;
 
-    static ImageView imageViewBackdropPath;
-    static TextView textViewOverview;
+    ImageView imageViewBackdropPath;
+    TextView textViewOverview;
+
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,13 +61,8 @@ public class MovieLuckySearchFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_movie_lucky_search, container, false);
 
         /******************************************************************************************/
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                discoverMovie();
-            }
-        }).start();
+        progressDialog = ProgressDialog.show(getContext(), null, "cargando...", true);
+        getIdMovieFirebase();
 
         textViewTitle = (TextView) rootView.findViewById(R.id.textView_title_cardView);
         imageViewPoster = (ImageView) rootView.findViewById(R.id.imageView_poster_cardView);
@@ -168,8 +172,115 @@ public class MovieLuckySearchFragment extends Fragment {
         myRef.child("backdrop_path").setValue(arrayListMovies.get(0).getBackdrop_path());
     }
 
-    public void discoverMovie() {
-        new TMDBService().execute("https://api.themoviedb.org/3/discover/movie?api_key=bf25f4ac2b3e20d7bde180f92504c75c&language=es&sort_by=popularity.desc&include_adult=false&include_video=false&page=1", "discover");
+
+    private void getIdMovieFirebase() {
+        final ArrayList<String> arrayListAux = new ArrayList<>();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference myRef = database.getReference("users").child(user);
+
+        myRef.child("movies").child("like").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Log.i("dsExist", "hay pelis");
+                    Log.i("ds", dataSnapshot.getValue().toString());
+
+                    for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                        arrayListAux.add(ds.getKey());
+                        Log.i("moviesAux", ds.getKey());
+                    }
+
+                    for (int pos=0; pos < arrayListAux.size(); pos++) {
+                        myRef.child("lucky").child("IDs").child(pos+"").setValue(arrayListAux.get(pos));
+                    }
+
+                } else {
+                    Log.i("dsExist", "NO hay pelis");
+                    Toast.makeText(getContext(), "No has marcado ninguna película como pendiente", Toast.LENGTH_SHORT).show();
+                }
+
+                myRef.child("lucky").child("totalMoviesLike").setValue(arrayListAux.size());
+                Log.i("array", arrayListAux.size()+"");
+                for (String s: arrayListAux) {
+                    Log.i("arrayAux", s);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        myRef.child("lucky").child("lastSearchID").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int numX = -1;
+                if (!dataSnapshot.exists()) {
+                    myRef.child("lucky").child("lastSearchID").setValue(-1);
+                } else {
+                    int num = Integer.parseInt(dataSnapshot.getValue().toString());
+                    Log.i("xxx", num + "");
+                    Log.i("xxx", arrayListAux.size() - 1 + "");
+                    if (num == arrayListAux.size() - 1 && arrayListAux.size() > 0) {
+                        myRef.child("lucky").child("lastSearchID").setValue(0);
+                        numX = 0;
+                    } else if (arrayListAux.size()==0) {
+
+                    } else {
+                        myRef.child("lucky").child("lastSearchID").setValue(num+1);
+                        numX = num+1;
+                    }
+                }
+
+                Log.i("array_num", numX+"");
+                myRef.child("lucky").child("totalMoviesLike").setValue(arrayListAux.size());
+                Log.i("array", arrayListAux.size()+"");
+                for (String s: arrayListAux) {
+                    Log.i("arrayAux", s);
+                }
+
+                final int finalNumX = numX;
+                if (finalNumX != -1) {
+                    arrayListMovies = new ArrayList<>();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            discoverMovie("https://api.themoviedb.org/3/movie/" + arrayListAux.get(finalNumX) + "/similar?api_key=bf25f4ac2b3e20d7bde180f92504c75c&language=es&page=1");
+                        }
+                    }).start();
+                } else {
+                    arrayListMovies = new ArrayList<>();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String dateMax;
+
+                            Date date = new Date();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                            dateMax = dateFormat.format(date.getTime());
+
+                            discoverMovie("https://api.themoviedb.org/3/discover/movie?api_key=bf25f4ac2b3e20d7bde180f92504c75c&language=es&region=ES&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&release_date.lte="+dateMax);
+                        }
+                    }).start();
+                }
+
+                progressDialog.dismiss();
+            }
+
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void discoverMovie(String s) {
+        new TMDBService().execute(s, "discover");
     }
     public void setTrailerPath() {
         Log.i("traileAAr", "imHere");
@@ -224,13 +335,13 @@ public class MovieLuckySearchFragment extends Fragment {
         try {
             jsonObject = new JSONObject(s);
             jsonArray = jsonObject.optJSONArray("results");
-
-            arrayListMovies.get(pos).setVideo_path(jsonArray.getJSONObject(0).getString("key"));
+            if (jsonArray.length()==0) {
+                arrayListMovies.get(pos).setVideo_path(null);
+            } else {
+                arrayListMovies.get(pos).setVideo_path(jsonArray.getJSONObject(0).getString("key"));
+            }
 
             Log.i("list_Movies_length", ""+arrayListMovies.size());
-            for (Movie m: arrayListMovies) {
-                Log.i("movie", m.toString());
-            }
 
         } catch (JSONException e) {
             e.printStackTrace();

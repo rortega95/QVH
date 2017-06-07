@@ -1,5 +1,6 @@
 package com.roe.qvh;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -53,15 +54,15 @@ public class MovieNextReleasesFragment extends Fragment {
         // Required empty public constructor
     }
 
-    static ArrayList<Movie> arrayListNextReleasesMovies = new ArrayList<>();
-    static ArrayList<String> arrayListNextReleasesMoviesDate = new ArrayList<>();
+    ArrayList<Movie> arrayListNextReleasesMovies = new ArrayList<>();
+    ArrayList<String> arrayListNextReleasesMoviesDate = new ArrayList<>();
 
-    static ImageView imageViewPoster;
-    static TextView textViewTitle;
-    static TextView textViewReleaseDate;
+    ImageView imageViewPoster;
+    TextView textViewTitle;
+    TextView textViewReleaseDate;
 
-    static TextView textViewOverview;
-    static int pos = 0;
+    int pos = 0;
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +71,9 @@ public class MovieNextReleasesFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_movie_next_releases, container, false);
 
         /******************************************************************************************/
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog = ProgressDialog.show(getContext(), null, "cargando...", true);
 
         new Thread(new Runnable() {
             @Override
@@ -81,8 +85,6 @@ public class MovieNextReleasesFragment extends Fragment {
         textViewTitle = (TextView) rootView.findViewById(R.id.textView_title_NextReleases);
         textViewReleaseDate = (TextView) rootView.findViewById(R.id.textView_releaseDate_cardTeahters);
         imageViewPoster = (ImageView) rootView.findViewById(R.id.imageView_poster_NextReleases);
-
-        Button buttonLike = (Button) rootView.findViewById(R.id.button_like_cardView);
 
         //textViewOverview = (TextView) rootView.findViewById(R.id.textView_overview);
 
@@ -341,6 +343,7 @@ public class MovieNextReleasesFragment extends Fragment {
             } else if (s.get(0) == "video_path") {
                 Log.i(s.get(2), s.get(1));
                 getMoviePath(s.get(1), Integer.parseInt(s.get(2)));
+                progressDialog.dismiss();
             }
         }
 

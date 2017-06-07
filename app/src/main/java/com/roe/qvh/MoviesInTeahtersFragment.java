@@ -1,5 +1,6 @@
 package com.roe.qvh;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -60,11 +61,13 @@ public class MoviesInTeahtersFragment extends Fragment {
 
     static ArrayList<Movie> arrayListMovies = new ArrayList<>();
 
-    static ImageView imageViewPoster;
-    static TextView textViewTitle;
+    ImageView imageViewPoster;
+    TextView textViewTitle;
 
-    static TextView textViewOverview;
-    static int pos = 0;
+    int pos = 0;
+
+    ProgressDialog progressDialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +76,9 @@ public class MoviesInTeahtersFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_movies_in_teahters, container, false);
 
         /******************************************************************************************/
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog = ProgressDialog.show(getContext(), null, "cargando...", true);
 
         new Thread(new Runnable() {
             @Override
@@ -302,6 +308,11 @@ public class MoviesInTeahtersFragment extends Fragment {
     private class TMDBService extends AsyncTask<String, Void, ArrayList<String>> {
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
         protected ArrayList<String> doInBackground(String... params) {
 
             String result = "";
@@ -349,12 +360,8 @@ public class MoviesInTeahtersFragment extends Fragment {
             } else if (s.get(0) == "video_path") {
                 Log.i(s.get(2), s.get(1));
                 getMoviePath(s.get(1), Integer.parseInt(s.get(2)));
+                progressDialog.dismiss();
             }
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
         }
 
         @Override
