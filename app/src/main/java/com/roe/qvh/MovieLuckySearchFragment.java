@@ -112,9 +112,7 @@ public class MovieLuckySearchFragment extends Fragment {
         imageViewPoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MovieDataFragment mdf = new MovieDataFragment();
-                mdf.getData(arrayListMovies.get(0));
-                mdf.show(getFragmentManager(), "abcabc");
+                runDialog();
             }
         });
 
@@ -335,6 +333,8 @@ public class MovieLuckySearchFragment extends Fragment {
         try {
             jsonObject = new JSONObject(s);
             jsonArray = jsonObject.optJSONArray("results");
+
+            Log.i("posMovie", pos+"");
             if (jsonArray.length()==0) {
                 arrayListMovies.get(pos).setVideo_path(null);
             } else {
@@ -346,6 +346,12 @@ public class MovieLuckySearchFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void runDialog() {
+        MovieDataFragment mdf = new MovieDataFragment();
+        mdf.getData(arrayListMovies.get(0));
+        mdf.show(getFragmentManager(), "abcabc");
     }
 
     private class TMDBService extends AsyncTask<String, Void, ArrayList<String>> {
@@ -410,6 +416,7 @@ public class MovieLuckySearchFragment extends Fragment {
         protected void onCancelled() {
             super.onCancelled();
         }
+
     }
 
 }

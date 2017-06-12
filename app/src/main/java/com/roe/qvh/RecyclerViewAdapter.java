@@ -1,6 +1,8 @@
 package com.roe.qvh;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,23 +21,35 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
+    private static ArrayList<Movie> list;
+    private static Context context;
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         ImageView poster;
-
         public ViewHolder(View v) {
             super(v);
             title = (TextView) v.findViewById(R.id.textView_title_cardView);
             poster = (ImageView) v.findViewById(R.id.imageView_poster_cardView);
-        }
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("tocado", getAdapterPosition()+"");
+                    MovieDataFragment mdf = new MovieDataFragment();
+                    FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
+                    mdf.getData(list.get(getAdapterPosition()));
+                    mdf.show(manager, "abcabc");
+                }
+
+            });
+        }
     }
 
-    private ArrayList<Movie> list;
-
-    public RecyclerViewAdapter(ArrayList<Movie> list){
+    public RecyclerViewAdapter(ArrayList<Movie> list, Context context){
         Log.i("sizelist", list.size()+"");
         this.list=list;
+        this.context = context;
     }
 
     @Override

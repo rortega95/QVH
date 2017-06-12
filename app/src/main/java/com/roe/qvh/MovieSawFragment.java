@@ -71,7 +71,7 @@ public class MovieSawFragment extends Fragment {
                                 Log.i("movie", m.toString());
                                 movies.add(m);
                             }
-                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies);
+                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies, getActivity());
                             recyclerView.setAdapter(adapter);
                         } else {
                             Log.i("dsExist", "NO hay pelis");

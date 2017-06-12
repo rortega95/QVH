@@ -1,8 +1,6 @@
 package com.roe.qvh;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -112,7 +110,7 @@ public class MovieDataFragment extends DialogFragment {
     public void setInCard() {
         Log.i("peliDialog", movie.toString());
 
-        textViewOverview.setText(movie.getOverview()+"/n"+movie.getOverview());
+        textViewOverview.setText(movie.getOverview());
 
         new Thread(new Runnable() {
             @Override

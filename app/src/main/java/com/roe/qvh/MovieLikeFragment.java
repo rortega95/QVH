@@ -3,11 +3,9 @@ package com.roe.qvh;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -78,7 +75,7 @@ public class MovieLikeFragment extends Fragment {
                                 Log.i("movie", m.toString());
                                 movies.add(m);
                             }
-                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies);
+                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies, getActivity());
                             recyclerView.setAdapter(adapter);
                         } else {
                             Log.i("dsExist", "NO hay pelis");
