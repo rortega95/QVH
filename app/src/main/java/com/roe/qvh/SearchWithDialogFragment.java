@@ -103,7 +103,7 @@ public class SearchWithDialogFragment extends DialogFragment {
         getGenre();
         if (editTextPerson.getText().length()>0) {
             Log.i("SearchPerson", editTextPerson.getText().toString());
-            new TMDBService().execute("https://api.themoviedb.org/3/search/person?api_key=bf25f4ac2b3e20d7bde180f92504c75c&language=es&query="+editTextPerson.getText()+"&page=1&include_adult=false");
+            new TMDBService().execute("https://api.themoviedb.org/3/search/person?api_key=bf25f4ac2b3e20d7bde180f92504c75c&language=es&query="+editTextPerson.getText().toString()+"&page=1&include_adult=false");
         } else {
             if (editTextYear.getText().length()>0) {
                 mQuery+="&year="+editTextYear.getText();
@@ -186,9 +186,9 @@ public class SearchWithDialogFragment extends DialogFragment {
             String result = "";
 
             try {
-                URL url = new URL(params[0]);
+                URL url = new URL(params[0].replace(" ", "%20"));
+                Log.i("url", url.toString());
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-
                 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                 String line;
