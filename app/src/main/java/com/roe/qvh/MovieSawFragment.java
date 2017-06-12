@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +60,7 @@ public class MovieSawFragment extends Fragment {
                 String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference myRef = database.getReference("users").child(user).child("movies").child("saw");
                 Log.i("key", myRef.getKey());
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                /*myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
@@ -68,10 +69,12 @@ public class MovieSawFragment extends Fragment {
                             for (DataSnapshot ds: dataSnapshot.getChildren()) {
                                 Log.i("value", ds.getValue().toString());
                                 Movie m = ds.getValue(Movie.class);
+                                m.setId(Integer.parseInt(ds.getKey()));
+                                Log.i("dsID", m.getId()+"");
                                 Log.i("movie", m.toString());
                                 movies.add(m);
                             }
-                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies, getActivity());
+                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies, getActivity(), "saw");
                             recyclerView.setAdapter(adapter);
                         } else {
                             Log.i("dsExist", "NO hay pelis");
@@ -84,6 +87,36 @@ public class MovieSawFragment extends Fragment {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         progressDialog.dismiss();
+                    }
+                });*/
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i("Change", "yiiiiahhh");
+                        movies.clear();
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                Log.i("value", ds.getValue().toString());
+                                Movie m = ds.getValue(Movie.class);
+                                m.setId(Integer.parseInt(ds.getKey()));
+                                Log.i("dsID", m.getId() + "");
+                                Log.i("movie", m.toString());
+                                movies.add(m);
+                            }
+
+                        } else {
+                            Log.i("dsExist", "NO hay pelis");
+                            Toast.makeText(getContext(), "No has marcado ninguna película como vista", Toast.LENGTH_SHORT).show();
+                        }
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies, getActivity(), "saw");
+                        recyclerView.swapAdapter(adapter, false);
+
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
             }

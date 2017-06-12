@@ -61,33 +61,34 @@ public class MovieLikeFragment extends Fragment {
                 String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference myRef = database.getReference("users").child(user).child("movies").child("like");
                 Log.i("key", myRef.getKey());
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.i("datachanged", "yes");
+                        Log.i("Change", "yiiiiahhh");
+                        movies.clear();
                         if (dataSnapshot.exists()) {
-
-                            Log.i("dsExist", "hay pelis");
-                            Log.i("ds", dataSnapshot.getValue().toString());
-                            for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 Log.i("value", ds.getValue().toString());
                                 Movie m = ds.getValue(Movie.class);
+                                m.setId(Integer.parseInt(ds.getKey()));
+                                Log.i("dsID", m.getId() + "");
                                 Log.i("movie", m.toString());
                                 movies.add(m);
                             }
-                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies, getActivity());
-                            recyclerView.setAdapter(adapter);
+
                         } else {
                             Log.i("dsExist", "NO hay pelis");
-                            Toast.makeText(getContext(), "No has marcado ninguna película como favorita", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "No has marcado ninguna película como vista", Toast.LENGTH_SHORT).show();
                         }
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(movies, getActivity(), "like");
+                        recyclerView.swapAdapter(adapter, false);
 
                         progressDialog.dismiss();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        progressDialog.dismiss();
+
                     }
                 });
             }
