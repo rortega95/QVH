@@ -43,7 +43,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 @Override
                 public void onClick(View v) {
                     Log.i("tocado", getAdapterPosition() + "");
-                    MovieDataFragment mdf = new MovieDataFragment();
+                    MovieDataDialogFragment mdf = new MovieDataDialogFragment();
                     FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
                     mdf.getData(list.get(getAdapterPosition()));
                     mdf.show(manager, "abcabc");

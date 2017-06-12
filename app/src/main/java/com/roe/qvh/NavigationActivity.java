@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,12 +24,16 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         MoviesInTeahtersFragment.OnFragmentInteractionListener, MovieNextReleasesFragment.OnFragmentInteractionListener,
         MovieLuckySearchFragment.OnFragmentInteractionListener {
 
+    TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        textView = (TextView) findViewById(R.id.textView);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -108,24 +111,31 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         if (id == R.id.nav_search) {
             fragment = new MovieSearchFragment();
+            textView.setText("");
 
         } else if (id == R.id.nav_luckysearch) {
             fragment = new MovieLuckySearchFragment();
+            textView.setText("");
 
         } else if (id == R.id.nav_theaters) {
             fragment = new MoviesInTeahtersFragment();
+            textView.setText("");
 
         } else if (id == R.id.nav_releases) {
             fragment = new MovieNextReleasesFragment();
+            textView.setText("");
 
         } else if (id == R.id.nav_movie_like) {
             fragment = new MovieLikeFragment();
+            textView.setText("");
 
         } else if (id == R.id.nav_movie_pending) {
             fragment = new MoviePendingFragment();
+            textView.setText("");
 
         } else if (id == R.id.nav_movie_saw) {
             fragment = new MovieSawFragment();
+            textView.setText("");
 
         }
 

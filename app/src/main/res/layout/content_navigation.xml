@@ -9,4 +9,16 @@
     tools:context="com.roe.qvh.NavigationActivity"
     tools:showIn="@layout/app_bar_navigation">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenid@ a\n\n¿QUÉ VEO HOY?\n\nAcceda al menú para encontrar la película que desee visualizar"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="36sp"
+        android:paddingTop="40dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp"/>
 </android.support.constraint.ConstraintLayout>

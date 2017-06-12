@@ -25,9 +25,9 @@ import com.squareup.picasso.Picasso;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieDataFragment extends DialogFragment {
+public class MovieDataDialogFragment extends DialogFragment {
 
-    public MovieDataFragment() {
+    public MovieDataDialogFragment() {
         // Required empty public constructor
     }
 

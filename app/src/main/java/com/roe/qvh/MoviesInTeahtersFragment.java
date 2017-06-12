@@ -148,7 +148,7 @@ public class MoviesInTeahtersFragment extends Fragment {
         buttonInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MovieDataFragment mdf = new MovieDataFragment();
+                MovieDataDialogFragment mdf = new MovieDataDialogFragment();
                 mdf.disable();
                 mdf.getData(arrayListMovies.get(pos));
                 mdf.show(getFragmentManager(), "");

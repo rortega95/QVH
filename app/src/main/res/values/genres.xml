@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="genres_array">
+        <item></item>
+        <item>Acción</item>
+        <item>Aventura</item>
+        <item>Animación</item>
+        <item>Comedia</item>
+        <item>Crimen</item>
+        <item>Documental</item>
+        <item>Drama</item>
+        <item>Fantasía</item>
+        <item>Historia</item>
+        <item>Terror</item>
+        <item>Música</item>
+        <item>Misterio</item>
+        <item>Romance</item>
+        <item>Ciencia ficción</item>
+        <item>Suspense</item>
+        <item>Guerra</item>
+        <item>Western</item>
+    </string-array>
+</resources>

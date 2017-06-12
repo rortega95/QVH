@@ -1,6 +1,5 @@
 package com.roe.qvh;
 
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -54,6 +53,7 @@ public class MovieLuckySearchFragment extends Fragment {
     TextView textViewOverview;
 
     ProgressDialog progressDialog;
+    int pos = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,8 +75,10 @@ public class MovieLuckySearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 upFirebase("like");
-                arrayListMovies.remove(0);
-                setInCard();
+                if (pos < arrayListMovies.size()-1) {
+                    pos++;
+                    setInCard();
+                }
             }
         });
 
@@ -85,8 +87,10 @@ public class MovieLuckySearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 upFirebase("pending");
-                arrayListMovies.remove(0);
-                setInCard();
+                if (pos < arrayListMovies.size()-1) {
+                    pos++;
+                    setInCard();
+                }
             }
         });
 
@@ -95,8 +99,10 @@ public class MovieLuckySearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 upFirebase("saw");
-                arrayListMovies.remove(0);
-                setInCard();
+                if (pos < arrayListMovies.size()-1) {
+                    pos++;
+                    setInCard();
+                }
             }
         });
 
@@ -104,8 +110,10 @@ public class MovieLuckySearchFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                arrayListMovies.remove(0);
-                setInCard();
+                if (pos < arrayListMovies.size()-1) {
+                    pos++;
+                    setInCard();
+                }
             }
         });
 
@@ -135,8 +143,6 @@ public class MovieLuckySearchFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-
     }
 
     public interface OnFragmentInteractionListener {
@@ -145,14 +151,14 @@ public class MovieLuckySearchFragment extends Fragment {
     }
 
     public void setInCard() {
-        Log.i("setInCard", arrayListMovies.get(0).getTitle());
+        Log.i("setInCard", arrayListMovies.get(pos).getTitle());
 
-        textViewTitle.setText(arrayListMovies.get(0).getTitle());
+        textViewTitle.setText(arrayListMovies.get(pos).getTitle());
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String imgUrl = "https://image.tmdb.org/t/p/w342" + arrayListMovies.get(0).getPoster_path();
+                String imgUrl = "https://image.tmdb.org/t/p/w342" + arrayListMovies.get(pos).getPoster_path();
                 Picasso.with(getContext()).load(imgUrl).fit().into(imageViewPoster);
             }
         }).run();
@@ -161,15 +167,14 @@ public class MovieLuckySearchFragment extends Fragment {
     private void upFirebase(String list){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference myRef = database.getReference("users").child(user).child("movies").child(list).child(arrayListMovies.get(0).getId()+"");
+        DatabaseReference myRef = database.getReference("users").child(user).child("movies").child(list).child(arrayListMovies.get(pos).getId()+"");
 
-        myRef.child("title").setValue(arrayListMovies.get(0).getTitle());
-        myRef.child("overview").setValue(arrayListMovies.get(0).getOverview());
-        myRef.child("poster_path").setValue(arrayListMovies.get(0).getPoster_path());
-        myRef.child("video_path").setValue(arrayListMovies.get(0).getVideo_path());
-        myRef.child("backdrop_path").setValue(arrayListMovies.get(0).getBackdrop_path());
+        myRef.child("title").setValue(arrayListMovies.get(pos).getTitle());
+        myRef.child("overview").setValue(arrayListMovies.get(pos).getOverview());
+        myRef.child("poster_path").setValue(arrayListMovies.get(pos).getPoster_path());
+        myRef.child("video_path").setValue(arrayListMovies.get(pos).getVideo_path());
+        myRef.child("backdrop_path").setValue(arrayListMovies.get(pos).getBackdrop_path());
     }
-
 
     private void getIdMovieFirebase() {
         final ArrayList<String> arrayListAux = new ArrayList<>();
@@ -264,8 +269,6 @@ public class MovieLuckySearchFragment extends Fragment {
                         }
                     }).start();
                 }
-
-                progressDialog.dismiss();
             }
 
 
@@ -346,11 +349,12 @@ public class MovieLuckySearchFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        progressDialog.dismiss();
     }
 
     public void runDialog() {
-        MovieDataFragment mdf = new MovieDataFragment();
-        mdf.getData(arrayListMovies.get(0));
+        MovieDataDialogFragment mdf = new MovieDataDialogFragment();
+        mdf.getData(arrayListMovies.get(pos));
         mdf.show(getFragmentManager(), "abcabc");
     }
 
