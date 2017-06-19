@@ -59,7 +59,8 @@ public class MovieLikeFragment extends Fragment {
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference myRef = database.getReference("users").child(user).child("movies").child("like");
+                DatabaseReference myRef = database.getReference("users").child(user).child("movies")
+                        .child("like");
                 Log.i("key", myRef.getKey());
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
