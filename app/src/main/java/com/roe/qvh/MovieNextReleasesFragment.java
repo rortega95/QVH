@@ -67,8 +67,6 @@ public class MovieNextReleasesFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_movie_next_releases, container, false);
 
-        /******************************************************************************************/
-
         progressDialog = new ProgressDialog(getActivity());
         progressDialog = ProgressDialog.show(getContext(), null, "cargando...", true);
 
@@ -140,8 +138,6 @@ public class MovieNextReleasesFragment extends Fragment {
             }
         });
 
-        /******************************************************************************************/
-
         return rootView;
     }
 
@@ -185,6 +181,9 @@ public class MovieNextReleasesFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * Metodo que carga los datos de la película en la vista de tarjeta
+     */
     public void setInCard() {
         Log.i("setInCard", arrayListNextReleasesMovies.get(pos).getTitle());
 
@@ -200,6 +199,9 @@ public class MovieNextReleasesFragment extends Fragment {
         }).run();
     }
 
+    /**
+     * Método que manda la petición para descubrir las películas a la clase asíncrona
+     */
     public void discoverMovie() {
         String dateMin;
         String dateMax;
@@ -218,6 +220,10 @@ public class MovieNextReleasesFragment extends Fragment {
             new TMDBService().execute("https://api.themoviedb.org/3/discover/movie?api_key=bf25f4ac2b3e20d7bde180f92504c75c&language=es&region=ES&sort_by=vote_count.desc&include_adult=false&include_video=false&page=1&release_date.gte="+dateMin+"&release_date.lte="+dateMax+"&vote_count.gte=50", "discover");
 
     }
+
+    /**
+     * Método que manda la petición para obtener el tráiler de la película a la clase asíncrona
+     */
     public void setTrailerPath() {
         Log.i("traileAAr", "imHere");
         Log.i("arraysize", arrayListNextReleasesMovies.size()+"");
@@ -228,6 +234,10 @@ public class MovieNextReleasesFragment extends Fragment {
         setInCard();
     }
 
+    /**
+     * Método que proceso la información del JSON y la guarda como un arraylist de películas
+     * @param s
+     */
     private void getListDiscover(String s) {
 
         Movie movie;
@@ -269,6 +279,12 @@ public class MovieNextReleasesFragment extends Fragment {
 
         setTrailerPath();
     }
+
+    /**
+     * Método que obtiene el identificador de una pelicula y llama a otro método para obtener su tráiler
+     * @param s
+     * @param pos
+     */
     private void getMoviePath(String s, int pos) {
 
         JSONObject jsonObject;
@@ -290,6 +306,10 @@ public class MovieNextReleasesFragment extends Fragment {
         }
     }
 
+    /**
+     * Clase asíncrona que procesa una petición http a la api y devuelve un String con el contenido
+     * del JSON
+     */
     private class TMDBService extends AsyncTask<String, Void, ArrayList<String>> {
 
         @Override
@@ -354,6 +374,11 @@ public class MovieNextReleasesFragment extends Fragment {
             super.onCancelled();
         }
     }
+
+    /**
+     * Metodo para escribir los datos de una película en la base de datos de firebase
+     * @param list
+     */
 
     private void upFirebase(String list){
         FirebaseDatabase database = FirebaseDatabase.getInstance();

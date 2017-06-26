@@ -5,5 +5,5 @@ package com.roe.qvh;
  */
 
 public interface OkCallback {
-    String url(String s);
+    void url(String s);
 }

@@ -10,8 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -45,6 +47,8 @@ public class SearchWithDialogFragment extends DialogFragment {
     Spinner spinnerGenres;
     EditText editTextPerson;
     EditText editTextYear;
+
+    DrawerLayout drawerLayout;
 
     String mQuery = "https://api.themoviedb.org/3/discover/movie?api_key=bf25f4ac2b3e20d7bde180f92504c75c&language=es&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
     int personID;
@@ -83,9 +87,11 @@ public class SearchWithDialogFragment extends DialogFragment {
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                dismiss();
             }
         });
+
+
         return builder.create();
     }
 
@@ -97,6 +103,8 @@ public class SearchWithDialogFragment extends DialogFragment {
     @Override
     public void dismiss() {
         super.dismiss();
+        drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        drawerLayout.openDrawer(Gravity.START);
     }
 
     public void discover() {

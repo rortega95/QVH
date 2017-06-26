@@ -57,6 +57,11 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
 
     ProgressDialog progressDialog;
 
+    Button buttonLike;
+    Button buttonPending;
+    Button buttonSaw;
+    Button buttonCancel;
+
     int pos = 0;
 
 
@@ -76,59 +81,10 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
         imageViewBackdropPath = (ImageView) view.findViewById(R.id.imageView_backdrop);
         textViewOverview = (TextView) view.findViewById(R.id.textView_overview);
 
-        Button buttonLike = (Button) view.findViewById(R.id.button_like_cardView);
-        buttonLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upFirebase("like");
-                if (pos < arrayListMovies.size()-1) {
-                    pos++;
-                    setInCard();
-                }
-            }
-        });
-
-        Button buttonPending = (Button) view.findViewById(R.id.button_pending_cardView);
-        buttonPending.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upFirebase("pending");
-                if (pos < arrayListMovies.size()-1) {
-                    pos++;
-                    setInCard();
-                }
-            }
-        });
-
-        Button buttonSaw = (Button) view.findViewById(R.id.button_watched_cardView);
-        buttonSaw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upFirebase("saw");
-                if (pos < arrayListMovies.size()-1) {
-                    pos++;
-                    setInCard();
-                }
-            }
-        });
-
-        Button buttonCancel = (Button) view.findViewById(R.id.button_cancel_cardView);
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pos < arrayListMovies.size()-1) {
-                    pos++;
-                    setInCard();
-                }
-            }
-        });
-
-        imageViewPoster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                runDialog();
-            }
-        });
+        buttonLike = (Button) view.findViewById(R.id.button_like_cardView);
+        buttonPending = (Button) view.findViewById(R.id.button_pending_cardView);
+        buttonSaw = (Button) view.findViewById(R.id.button_watched_cardView);
+        buttonCancel = (Button) view.findViewById(R.id.button_cancel_cardView);
 
         // Inflate the layout for this fragment
         return view;
@@ -150,8 +106,6 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-
-
     }
 
     @Override
@@ -161,11 +115,11 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
     }
 
     @Override
-    public String url(String s) {
+    public void url(String s) {
         Log.i("Callback", s);
         progressDialog = ProgressDialog.show(getContext(), null, "cargando...", true);
         discoverMovie(s);
-        return null;
+        activeButton();
     }
 
     /**
@@ -183,6 +137,62 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
         void onFragmentInteraction(Uri uri);
     }
 
+    private void activeButton() {
+
+        buttonLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upFirebase("like");
+                if (pos < arrayListMovies.size()-1) {
+                    pos++;
+                    setInCard();
+                }
+            }
+        });
+
+        buttonPending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upFirebase("pending");
+                if (pos < arrayListMovies.size()-1) {
+                    pos++;
+                    setInCard();
+                }
+            }
+        });
+
+        buttonSaw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upFirebase("saw");
+                if (pos < arrayListMovies.size()-1) {
+                    pos++;
+                    setInCard();
+                }
+            }
+        });
+
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pos < arrayListMovies.size()-1) {
+                    pos++;
+                    setInCard();
+                }
+            }
+        });
+
+        imageViewPoster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runDialog();
+            }
+        });
+    }
+
+    /**
+     * Metodo que carga los datos de la película en la vista de tarjeta
+     */
     public void setInCard() {
         Log.i("setInCard", arrayListMovies.get(pos).getTitle());
 
@@ -197,6 +207,10 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
         }).run();
     }
 
+    /**
+     * Metodo para escribir los datos de una película en la base de datos de firebase
+     * @param list
+     */
     private void upFirebase(String list){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -209,10 +223,18 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
         myRef.child("backdrop_path").setValue(arrayListMovies.get(pos).getBackdrop_path());
     }
 
+    /**
+     * Método que manda la petición para descubrir las películas a la clase asíncrona
+     * @param s
+     */
     public void discoverMovie(String s) {
 
         new TMDBService().execute(s, "discover");
     }
+
+    /**
+     * Método que manda la petición para obtener el tráiler de la película a la clase asíncrona
+     */
     public void setTrailerPath() {
         Log.i("traileAAr", "imHere");
         Log.i("arraysize", arrayListMovies.size()+"");
@@ -223,6 +245,10 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
         setInCard();
     }
 
+    /**
+     * Método que proceso la información del JSON y la guarda como un arraylist de películas
+     * @param s
+     */
     private void getListDiscover(String s) {
 
         Movie movie;
@@ -268,6 +294,12 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
         }
 
     }
+
+    /**
+     * Método que obtiene el identificador de una pelicula y llama a otro método para obtener su tráiler
+     * @param s
+     * @param pos
+     */
     private void getMoviePath(String s, int pos) {
 
         JSONObject jsonObject;
@@ -299,6 +331,10 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
         mdf.show(getFragmentManager(), "abcabc");
     }
 
+    /**
+     * Clase asíncrona que procesa una petición http a la api y devuelve un String con el contenido
+     * del JSON
+     */
     private class TMDBService extends AsyncTask<String, Void, ArrayList<String>> {
 
         @Override
@@ -365,7 +401,4 @@ public class MovieSearchFragment extends Fragment implements OkCallback {
 
     }
 
-
 }
-
-

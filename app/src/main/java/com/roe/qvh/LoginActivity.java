@@ -115,8 +115,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        /******************************************************************************************/
-
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -135,8 +133,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // ...
             }
         };
-
-        /******************************************************************************************/
     }
 
     private void populateAutoComplete() {
@@ -184,9 +180,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * Método que es llamado cuando se pulsa el botón de inicio sesión. Comrpueba la validez de
+     * todos los campos e inicia el proceso.
      */
     private void attemptLogin() {
         if (mAuthTask != null) {
@@ -237,13 +232,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //mAuthTask = new UserLoginTask(email, password);
             //mAuthTask.execute((Void) null);
 
-            /**************************************************************************************/
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            final DatabaseReference myRef = database.getReference().child("users");
-            Log.i("myref",myRef.getKey());
-
-
-
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -255,19 +243,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             // signed in user can be handled in the listener.
                             if (!task.isSuccessful()) {
                                 Log.w("singin_fail", "signInWithEmail:failed", task.getException());
-                                Toast.makeText(getApplicationContext(), "Error, contraseña incorrecta", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Error, correo o " +
+                                        "contraseña incorrectos", Toast.LENGTH_SHORT).show();
                                 showProgress(false);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Inicio de sesion correcto",
+                                        Toast.LENGTH_SHORT).show();
                             }
-
                             // ...
                         }
                     });
-            /**************************************************************************************/
         }
     }
 
+    /**
+     * Método que es llamado cuando se pulsa el botón de registro. Comrpueba la validez de
+     * todos los campos e inicia el proceso, iniciando sesión después si el proceso fue
+     * satisfactorio.
+     */
     private void registerUser() {
         if (mAuthTask != null) {
             return;
@@ -285,19 +278,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError("Campo obligatorio");
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
+            mPasswordView.setError("Contraseña no válida");
             focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
+            mEmailView.setError("Campo obligatorio");
             focusView = mEmailView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+            mEmailView.setError("Correo no válido");
             focusView = mEmailView;
             cancel = true;
         }
@@ -310,13 +307,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
-
-            /**************************************************************************************/
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            final DatabaseReference myRef = database.getReference().child("users");
-            Log.i("myref",myRef.getKey());
 
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -328,20 +318,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
                             if (!task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Cuenta existente", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Esa cuenta ya existe, " +
+                                        "inicie sesion", Toast.LENGTH_SHORT).show();
                                 showProgress(false);
                             } else {
-                                myRef.child(mAuth.getCurrentUser().getUid()).child("email").setValue(email);
-                                Toast.makeText(getApplicationContext(), "Nueva cuenta creada", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Cuenta creada con éxito",
+                                        Toast.LENGTH_SHORT).show();
                             }
-
                             // ...
                         }
                     });
-            /**************************************************************************************/
         }
     }
-
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");

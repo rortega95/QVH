@@ -60,7 +60,6 @@ public class MovieLuckySearchFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_movie_lucky_search, container, false);
 
-        /******************************************************************************************/
         progressDialog = ProgressDialog.show(getContext(), null, "cargando...", true);
         getIdMovieFirebase();
 
@@ -124,8 +123,6 @@ public class MovieLuckySearchFragment extends Fragment {
             }
         });
 
-        /******************************************************************************************/
-
         return rootView;
     }
 
@@ -150,6 +147,9 @@ public class MovieLuckySearchFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * Metodo que carga los datos de la película en la vista de tarjeta
+     */
     public void setInCard() {
         Log.i("setInCard", arrayListMovies.get(pos).getTitle());
 
@@ -164,6 +164,10 @@ public class MovieLuckySearchFragment extends Fragment {
         }).run();
     }
 
+    /**
+     * Metodo para escribir los datos de una película en la base de datos de firebase
+     * @param list
+     */
     private void upFirebase(String list){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -280,9 +284,17 @@ public class MovieLuckySearchFragment extends Fragment {
         });
     }
 
+    /**
+     * Método que manda la petición para descubrir las películas a la clase asíncrona
+     * @param s
+     */
     public void discoverMovie(String s) {
         new TMDBService().execute(s, "discover");
     }
+
+    /**
+     * Método que manda la petición para obtener el tráiler de la película a la clase asíncrona
+     */
     public void setTrailerPath() {
         Log.i("traileAAr", "imHere");
         Log.i("arraysize", arrayListMovies.size()+"");
@@ -293,6 +305,10 @@ public class MovieLuckySearchFragment extends Fragment {
         setInCard();
     }
 
+    /**
+     * Método que proceso la información del JSON y la guarda como un arraylist de películas
+     * @param s
+     */
     private void getListDiscover(String s) {
 
         Movie movie;
@@ -328,6 +344,12 @@ public class MovieLuckySearchFragment extends Fragment {
 
         setTrailerPath();
     }
+
+    /**
+     * Método que obtiene el identificador de una pelicula y llama a otro método para obtener su tráiler
+     * @param s
+     * @param pos
+     */
     private void getMoviePath(String s, int pos) {
 
         JSONObject jsonObject;

@@ -43,11 +43,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        /******************************************************************************************/
-
-
-        /******************************************************************************************/
     }
 
     @Override
@@ -63,8 +58,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        /******************************************************************************************/
-
         ImageButton logout = (ImageButton) findViewById(R.id.button_logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +71,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         TextView textView = (TextView) findViewById(R.id.textView_email_navHeader);
         textView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-
-        /******************************************************************************************/
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation, menu);
@@ -104,7 +95,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         Fragment fragment = null;

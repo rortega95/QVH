@@ -64,7 +64,6 @@ public class MoviePendingFragment extends Fragment {
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.i("Change", "yiiiiahhh");
                         movies.clear();
                         if (dataSnapshot.exists()) {
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
